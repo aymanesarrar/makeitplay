@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { ReactNode, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { CreatePlaylistModal } from "./Modal";
+import { UrlModal } from "./UrlModal";
 const MakeItLayout = ({
   children,
   picture,
@@ -84,6 +85,7 @@ const MakeItLayout = ({
         </WrapItem>
       </HStack>
       <CreatePlaylistModal isOpen={isOpen} onClose={onClose} />
+      <UrlModal />
       {children}
     </Flex>
   );

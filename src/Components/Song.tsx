@@ -1,4 +1,4 @@
-import { Avatar, Flex, WrapItem, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 export const Song = ({
   name,
@@ -13,28 +13,65 @@ export const Song = ({
 }) => {
   const currentDate = new Date(date as string);
   return (
-    <Flex
-      width="full"
-      padding="1rem"
-      justifyContent="space-between"
-      alignItems="center"
+    <Box
+      maxW="sm"
+      overflow="hidden"
+      borderRadius="lg"
+      boxShadow="md"
+      transition="transform 0.2s"
+      _hover={{ transform: "scale(1.05)" }}
     >
-      <Flex gap="2rem" alignItems="center">
-        <WrapItem>
-          <Avatar name={artist} src={picture} size="lg" />
-        </WrapItem>
-        <Flex flexDirection="column">
-          <Text fontSize="xl" fontWeight="bold">
+      <Box position="relative" h="0" pb="56.25%">
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          bgImage={`url(${picture})`}
+          bgSize="cover"
+          bgPosition="center"
+          bgRepeat="no-repeat"
+        />
+      </Box>
+      <Box
+        p="4"
+        position="relative"
+        bgGradient="linear(to-t, rgba(0,0,0,0.6), transparent)"
+      >
+        <Flex flexDirection="column" alignItems="center" mt="2">
+          <Text
+            fontSize="xl"
+            fontWeight="bold"
+            textAlign="center"
+            color="white"
+            textShadow="1px 1px 2px rgba(0,0,0,0.6)"
+            lineHeight="shorter"
+          >
             {artist}
           </Text>
-          <Text color="spotify.500" fontWeight="extrabold">
+          <Text
+            fontSize="lg"
+            color="white"
+            fontWeight="extrabold"
+            textAlign="center"
+            textShadow="1px 1px 2px rgba(0,0,0,0.6)"
+            lineHeight="shorter"
+          >
             {name}
           </Text>
         </Flex>
-      </Flex>
-      <Text color="spotify.500">
-        added on : {currentDate.toLocaleDateString()}
-      </Text>
-    </Flex>
+        <Text
+          color="white"
+          textAlign="center"
+          mt="4"
+          textShadow="1px 1px 2px rgba(0,0,0,0.6)"
+          fontSize="sm"
+          fontStyle="italic"
+        >
+          Added on: {currentDate.toLocaleDateString()}
+        </Text>
+      </Box>
+    </Box>
   );
 };

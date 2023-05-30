@@ -10,4 +10,9 @@ const spotifyUris = atom({
   default: [] as string[],
 });
 
-export { userId, spotifyUris };
+const playlistUrl = atom({
+  key: "url",
+  default: "" as string,
+});
+
+export { userId, spotifyUris, playlistUrl };

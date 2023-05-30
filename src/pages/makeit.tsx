@@ -5,7 +5,7 @@ import { spotifyUris, userId } from "@/lib/state";
 import { supabase, SUPABASE_ANON_KEY, SUPABSE_URL } from "@/lib/supabase";
 import { fetcher } from "@/lib/utils";
 import { LikedSong } from "@/types/songs";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Grid, Text } from "@chakra-ui/react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { nanoid } from "nanoid";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -61,11 +61,11 @@ const Makeit = ({
   return (
     <MakeItLayout
       picture={data?.images[0].url}
-      name={data.display_name}
+      name={data?.display_name}
       token={session?.provider_token}
     >
-      <Flex flexDirection="column" width={["full", "2xl"]} margin="0 auto">
-        {likedSongs?.items.map((likedSong: LikedSong) => (
+      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
+        {likedSongs?.items?.map((likedSong: LikedSong) => (
           <Song
             key={nanoid()}
             name={likedSong.track.name}
@@ -74,7 +74,7 @@ const Makeit = ({
             date={likedSong.added_at}
           />
         ))}
-      </Flex>
+      </Grid>
     </MakeItLayout>
   );
 };
@@ -89,7 +89,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  if (!session) {
+  if (!session?.provider_token) {
     return {
       redirect: {
         destination: "/",

@@ -26,6 +26,7 @@ export default function Home() {
         scopes: scopes.join(" "),
       },
     });
+    router.push("/makeit");
   };
   useEffect(() => {
     const data = supabase.auth.onAuthStateChange((event, session) => {
@@ -83,7 +84,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-
   if (session?.provider_token) {
     return {
       redirect: {

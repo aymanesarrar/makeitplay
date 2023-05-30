@@ -1,5 +1,5 @@
 import useClient from "@/hooks/useClient";
-import { spotifyUris, userId } from "@/lib/state";
+import { playlistUrl, spotifyUris, userId } from "@/lib/state";
 import { fetchLikedSongs } from "@/lib/utils";
 import {
   Button,
@@ -18,7 +18,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const CreatePlaylistModal = ({
   isOpen,
@@ -36,6 +36,7 @@ const CreatePlaylistModal = ({
     isPublic: boolean;
   }>({ name: "", description: "", isPublic: false });
   const [loading, setLoading] = useState(false);
+  const [url, setUrl] = useRecoilState(playlistUrl);
   const createPlaylist = async () => {
     setLoading(true);
     const data: Awaited<ReturnType<typeof fetch>> = await fetch(
@@ -55,6 +56,7 @@ const CreatePlaylistModal = ({
 
     if (data.status === 201) {
       const res = await data.json();
+      setUrl(res.href);
       const uris = await fetchLikedSongs(token);
       let addSongs;
       while (uris.length !== 0) {
@@ -97,28 +99,45 @@ const CreatePlaylistModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create playlist</ModalHeader>
+      <ModalContent borderRadius="md" bg="gray.700">
+        <ModalHeader color="white">Create playlist</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <VStack>
-            <Input
-              value={newPlaylist.name}
-              onChange={(e) =>
-                setNewPlaylist({ ...newPlaylist, name: e.target.value })
-              }
-              placeholder="playlist name"
-            />
-            <Input
-              value={newPlaylist.description}
-              onChange={(e) =>
-                setNewPlaylist({ ...newPlaylist, description: e.target.value })
-              }
-              placeholder="playlist description"
-            />
+          <VStack spacing={4}>
+            <FormControl>
+              <FormLabel color="white">Playlist Name</FormLabel>
+              <Input
+                value={newPlaylist.name}
+                onChange={(e) =>
+                  setNewPlaylist({ ...newPlaylist, name: e.target.value })
+                }
+                placeholder="Enter playlist name"
+                size="lg"
+                bg="gray.600"
+                color="white"
+                _placeholder={{ color: "gray.400" }}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel color="white">Playlist Description</FormLabel>
+              <Input
+                value={newPlaylist.description}
+                onChange={(e) =>
+                  setNewPlaylist({
+                    ...newPlaylist,
+                    description: e.target.value,
+                  })
+                }
+                placeholder="Enter playlist description"
+                size="lg"
+                bg="gray.600"
+                color="white"
+                _placeholder={{ color: "gray.400" }}
+              />
+            </FormControl>
             <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="public" mb="0">
-                public ?
+              <FormLabel htmlFor="public" mb="0" color="white">
+                Public?
               </FormLabel>
               <Switch
                 id="public"
@@ -128,6 +147,7 @@ const CreatePlaylistModal = ({
                     isPublic: e.target.checked,
                   })
                 }
+                colorScheme="teal"
               />
             </FormControl>
           </VStack>
@@ -144,7 +164,7 @@ const CreatePlaylistModal = ({
             variant="outline"
             onClick={createPlaylist}
           >
-            Make it
+            Create Playlist
           </Button>
         </ModalFooter>
       </ModalContent>
